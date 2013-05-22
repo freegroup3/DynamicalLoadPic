@@ -2,7 +2,10 @@
 bin/
 bin-debug/
 bin-release/
-
+.actionScriptProperties
+.flexProperties
+.project
+html-template/
 # Other files and folders
 .settings/
 
