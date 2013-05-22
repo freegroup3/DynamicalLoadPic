@@ -10,6 +10,7 @@
 			
 			private var mLoader:Loader;
 			private var ui:UIComponent  = new UIComponent();
+			private var loadSuccess:Boolean;
 			public var Xcoordinate:int = -50;
 			public var Ycoordinate:int = -100;
 			
@@ -19,31 +20,38 @@
 				mLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
 				mLoader.contentLoaderInfo.addEventListener(IOErrorEvent.DISK_ERROR, LoadSwfError);
 				mLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, LoadSwfError);
-				addElement( ui );
 				
+				mLoader.load(new URLRequest("assets/EmbedMe.swf"));
+				
+				addElement( ui );
 			}
 			private function duplicateSWFHandler(event:MouseEvent):void
 			{
-				LoadSwf();
 				Xcoordinate += 50;
 				Ycoordinate += 100;
+				objectDuplicate();				
 			}
-			private function LoadSwf():void
+			private function objectDuplicate():void
 			{
-				mLoader.load(new URLRequest("assets/EmbedMe.swf"));
+				if (loadSuccess) 
+				{
+					var displayTheSwf:DisplayObject = mLoader.content as DisplayObject;
+					displayTheSwf.x = Xcoordinate;
+					displayTheSwf.y = Ycoordinate;
+					
+					ui.addChild(displayTheSwf);
+					showStatus.text = "複製成功";
+				}else{
+					showStatus.text = "稍等";
+				}
 			}
 			private function completeHandler(event:Event):void
 			{
-				var displayTheSwf:DisplayObject = mLoader.content as DisplayObject;
-				displayTheSwf.x = Xcoordinate;
-				displayTheSwf.y = Ycoordinate;
-				
-				ui.addChild(displayTheSwf);
-				showStatus.text = "複製成功";
+				loadSuccess = true;
 			}
 			private function LoadSwfError(event:Event):void
 			{
-				showStatus.text = "複製出現錯誤";
+				showStatus.text = "載入出現錯誤";
 			}
 		]]>
 	</fx:Script>
