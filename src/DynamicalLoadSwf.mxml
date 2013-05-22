@@ -10,12 +10,21 @@
 			
 			private var mLoader:Loader;
 			private var ui:UIComponent  = new UIComponent();
+			public var Xcoordinate:int = -50;
+			public var Ycoordinate:int = -100;
 			
 			private function init():void
 			{
 				mLoader = new Loader();
 				mLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
 				addElement( ui );
+				
+			}
+			private function duplicateSWFHandler(event:MouseEvent):void
+			{
+				LoadSwf();
+				Xcoordinate += 50;
+				Ycoordinate += 100;
 			}
 			private function LoadSwf():void
 			{
@@ -23,15 +32,11 @@
 			}
 			private function completeHandler(event:Event):void
 			{
-				var displayA:DisplayObject = mLoader.content as DisplayObject;
-				displayA.x = -50;
-				displayA.y = -100;
+				var displayTheSwf:DisplayObject = mLoader.content as DisplayObject;
+				displayTheSwf.x = Xcoordinate;
+				displayTheSwf.y = Ycoordinate;
 				
-				ui.addChild(displayA);
-			}
-			private function duplicateSWFHandler(event:MouseEvent):void
-			{
-				trace("duplicate success");
+				ui.addChild(displayTheSwf);
 			}
 		]]>
 	</fx:Script>
