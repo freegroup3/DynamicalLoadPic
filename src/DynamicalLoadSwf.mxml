@@ -17,6 +17,8 @@
 			{
 				mLoader = new Loader();
 				mLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+				mLoader.contentLoaderInfo.addEventListener(IOErrorEvent.DISK_ERROR, LoadSwfError);
+				mLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, LoadSwfError);
 				addElement( ui );
 				
 			}
@@ -37,12 +39,18 @@
 				displayTheSwf.y = Ycoordinate;
 				
 				ui.addChild(displayTheSwf);
+				showStatus.text = "複製成功";
+			}
+			private function LoadSwfError(event:Event):void
+			{
+				showStatus.text = "複製出現錯誤";
 			}
 		]]>
 	</fx:Script>
+	<s:Label text="按下後開始複製" id="showStatus" x="300"/>
 	<s:Button id="duplicateSWF" label="往下複製SWF檔" 
 			  click="duplicateSWFHandler(event)" 
-			  x="300" y="10"/>
+			  x="300" y="15"/>
 </s:Application>
 
 

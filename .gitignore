@@ -4,6 +4,7 @@ bin-release/
 .actionScriptProperties
 .flexProperties
 .project
+.DS_Store
 html-template/
 # Other files and folders
 .settings/
