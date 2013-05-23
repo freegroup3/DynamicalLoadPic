@@ -13,6 +13,7 @@
 			private var loadSuccess:Boolean;
 			public var Xcoordinate:int = -50;
 			public var Ycoordinate:int = -100;
+			public var displayTheSwf:DisplayObject;
 			
 			private function init():void
 			{
@@ -27,20 +28,18 @@
 			}
 			private function duplicateSWFHandler(event:MouseEvent):void
 			{
-				Xcoordinate += 50;
-				Ycoordinate += 100;
 				objectDuplicate();				
 			}
 			private function objectDuplicate():void
 			{
 				if (loadSuccess) 
 				{
-					var displayTheSwf:DisplayObject = mLoader.content as DisplayObject;
+					displayTheSwf = mLoader.content as DisplayObject;
 					displayTheSwf.x = Xcoordinate;
 					displayTheSwf.y = Ycoordinate;
 					
 					ui.addChild(displayTheSwf);
-					showStatus.text = "複製成功";
+					showStatus.text = "載入成功";
 				}else{
 					showStatus.text = "稍等";
 				}
@@ -53,12 +52,29 @@
 			{
 				showStatus.text = "載入出現錯誤";
 			}
+			private function cloneObject2(orjObj:DisplayObject):DisplayObject
+			{
+				var copyObj:ByteArray = new ByteArray();
+				copyObj.writeObject(orjObj);
+				copyObj.position = 0;
+				trace("有東西複製出來了", copyObj);
+				return(copyObj.readObject()); 
+			}
+			private function pushDisplayObject(event:MouseEvent):void
+			{
+				Xcoordinate += 50;
+				Ycoordinate += 100;
+				trace(cloneObject2(displayTheSwf));
+			}
 		]]>
 	</fx:Script>
 	<s:Label text="按下後開始複製" id="showStatus" x="300"/>
-	<s:Button id="duplicateSWF" label="往下複製SWF檔" 
+	<s:Button id="duplicateSWF" label="載入SWF檔" 
 			  click="duplicateSWFHandler(event)" 
 			  x="300" y="15"/>
+	<s:Button id="cloneObject" label="往下複製SWF檔" 
+			  click="pushDisplayObject(event)" 
+			  x="300" y="40"/>
 </s:Application>
 
 
