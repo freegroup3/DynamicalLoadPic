@@ -1,0 +1,1 @@
+﻿package  {	import flash.display.MovieClip;		public class EmbedMe extends MovieClip {				public function EmbedMe() {			// constructor code		}		public function greet():String		{			return("test test");		}	}	}

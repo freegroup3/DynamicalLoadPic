@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   minWidth="955" minHeight="600"
+			   applicationComplete="init()">
+	<fx:Declarations>
+		<s:HTTPService url="assets/user-data.xml" id="userData" 
+					   result="contentHandler(event)" resultFormat="e4x"/>
+	</fx:Declarations>
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.rpc.events.ResultEvent;
+			import spark.components.Grid;
+			import spark.events.GridSelectionEvent;
+			
+			[Bindable]
+			private var txtList:XMLList;
+			
+			[Bindable]
+			private var jpgList:XMLList;
+			
+			[Bindable]
+			private var pngList:XMLList;
+			
+			[Bindable]
+			private var selectedData:XML;
+			
+			[Bindable]
+			private var selectedData2:XML;
+			
+			[Bindable]
+			private var selectedData3:XML;
+			
+			private var txtLoader:URLLoader;
+			
+			private function init():void
+			{
+				userData.send();
+				showTxt.text = "No contact Selected";
+				
+				txtLoader = new URLLoader();
+				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
+			}
+			
+			private function onLoaded(e:Event):void
+			{
+				trace(e.target.data);
+				showTxt.text = e.target.data;
+			}
+			
+//			private function selectionChangeHandler(event:XML):void
+//			{
+//				const eventGrid:Grid = event.currentTarget.grid;
+//				var currentIndex:int = eventGrid.selectedIndex;
+//				var currentDataItem:Object = eventGrid.selectedItem;
+//				profileJob.text = String(currentDataItem.companyID);
+//				profileEmail.text = String(currentDataItem.lastName);
+//			}
+			
+			private function contentHandler(evt:ResultEvent):void
+			{
+				txtList = evt.result.txt;
+				jpgList = evt.result.jpg;
+				pngList = evt.result.png;
+			}
+			
+			private function showProfile(evt:Event):void
+			{
+				selectedData = txtList2.selectedItem as XML;	
+				selectedData2 = jpgList2.selectedItem as XML;	
+				selectedData3 = pngList2.selectedItem as XML;
+				trace("the selectedData", txtList2.selectedItem.source);
+				txtLoader.load(new URLRequest(txtList2.selectedItem.source));
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup>
+		<s:VGroup height="490">
+			
+			<mx:DataGrid id="txtList2" width="400" change="showProfile(event)" dataProvider="{txtList}">
+				<mx:columns>
+					<mx:DataGridColumn dataField="source" headerText="txt source"/>
+				</mx:columns>
+			</mx:DataGrid>			
+			<mx:DataGrid id="jpgList2" width="400" change="showProfile(event)" dataProvider="{jpgList}">
+				<mx:columns>
+					<mx:DataGridColumn dataField="source" headerText="jpg source"/>
+				</mx:columns>
+			</mx:DataGrid>			
+			<mx:DataGrid id="pngList2" width="400" change="showProfile(event)" dataProvider="{pngList}">
+				<mx:columns>
+					<mx:DataGridColumn dataField="source" headerText="png source"/>
+				</mx:columns>
+			</mx:DataGrid>			
+			
+			<s:Label id="profileJob" text="Position:{selectedData2.source}"/>
+			<s:Label id="profileEmail" text="Email:{selectedData3.source}"/>
+		</s:VGroup>
+		<s:VGroup width="360">
+			<s:Label fontSize="24" id="showTxt"/>
+			<mx:Image id="showJpg" source="{selectedData2.source}"/>
+			<mx:Image id="showPng" source="{selectedData3.source}"/>
+		</s:VGroup>
+	</s:HGroup>
+</s:Application>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
