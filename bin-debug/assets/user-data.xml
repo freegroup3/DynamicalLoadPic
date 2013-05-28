@@ -36,4 +36,16 @@
 	<png>
 		<source>assets/4.png</source>
 	</png>
+	<mp3>
+		<source>assets/One.mp3</source>
+	</mp3>
+	<mp3>
+		<source>assets/Linde.mp3</source>
+	</mp3>
+	<swf>
+		<source>assets/EmbedMe.swf</source>
+	</swf>
+	<swf>
+		<source>assets/EmbedMe3.swf</source>
+	</swf>
 </AllTypeFileSource>
