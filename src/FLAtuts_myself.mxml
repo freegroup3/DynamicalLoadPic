@@ -15,21 +15,6 @@
 			import spark.events.GridSelectionEvent;
 			import spark.events.IndexChangeEvent;
 			
-			[Bindable]
-			private var selectedData:XML;
-			
-			[Bindable]
-			private var selectedData2:XML;
-			
-			[Bindable]
-			private var selectedData3:XML;
-			
-			[Bindable]
-			private var selectedData4:XML;
-			
-			[Bindable]
-			private var selectedData5:XML;
-			
 			private var txtLoader:URLLoader;
 			public var snd:Sound;
 			public var sndchannel:SoundChannel;
@@ -37,30 +22,16 @@
 			[Bindable]
 			public var allTypeSourceXML:XML = new XML();
 			
-			[Bindable]
-			public var txtTypeSource:XMLList;
-			
-			[Bindable]
-			public var txtTypeSourceCol:XMLListCollection;
-			
-			
 			private function init():void
-			{
-//				txtLoader = new URLLoader();
-//				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
-				
+			{				
 				var myLoader:URLLoader = new URLLoader(new URLRequest("assets/user-data.xml"));
 				myLoader.addEventListener("complete", xmlLoaded);
-
-				txtTypeSource = allTypeSourceXML.jpg.source;
-				txtTypeSourceCol = new XMLListCollection(txtTypeSource);
 				
 				function xmlLoaded(event:Event):void
 				{
 					showTxt.text = "XML載入成功";
 					allTypeSourceXML = XML(myLoader.data);
 				}
-				
 			}
 			
 			private function onLoaded(e:Event):void
@@ -92,17 +63,6 @@
 //			{
 //				profileJob.text = event.currentTarget.selectedItem;
 //				profileEmail.text = event.currentTarget.selectedIndex;
-//			}
-			
-//			private function showProfile(evt:Event):void
-//			{
-//				selectedData = txtList2.selectedItem as XML;	
-//				selectedData2 = jpgList2.selectedItem as XML;	
-//				selectedData3 = pngList2.selectedItem as XML;
-//				selectedData4 = mp3List2.selectedItem as XML;
-//				selectedData5 = swfList2.selectedItem as XML;
-//				trace("the selectedData", mp3List2.selectedItem.source);
-//				txtLoader.load(new URLRequest(txtList2.selectedItem.source));
 //			}
 			
 			private function playMp3InAsset(e:MouseEvent):void
@@ -164,27 +124,3 @@
 		
 	</s:HGroup>
 </s:Application>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
