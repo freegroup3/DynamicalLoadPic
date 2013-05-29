@@ -10,8 +10,9 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.XMLListCollection;
-			import mx.rpc.events.ResultEvent;
+			import mx.managers.PopUpManager;
 			import spark.components.Grid;
+			import spark.components.TitleWindow;
 			import spark.events.GridSelectionEvent;
 			import spark.events.IndexChangeEvent;
 			
@@ -22,6 +23,7 @@
 			public var allTypeSourceXML:XML = new XML();
 			
 			private var txtLoader:URLLoader;
+			private var mp3Selected:String;
 			
 			[Bindable]
 			private var jpgSelected:String;
@@ -29,62 +31,54 @@
 			[Bindable]
 			private var pngSelected:String;
 			
-			private var mp3Selected:String;
-			
 			[Bindable]
 			private var swfSelected:String;
 			
+			static private const LOADER_COMPLETE:String = "complete";
+			
 			private function init():void
 			{
+				var myLoader:URLLoader = new URLLoader(new URLRequest("assets/user-data.xml"));
+				myLoader.addEventListener(LOADER_COMPLETE, xmlLoaded);
+				myLoader.addEventListener(IOErrorEvent.IO_ERROR, xmlErrorHandler);
+				myLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, xmlErrorHandler);
+				
 				txtLoader = new URLLoader();
 				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
-				
-				var myLoader:URLLoader = new URLLoader(new URLRequest("assets/user-data.xml"));
-				myLoader.addEventListener("complete", xmlLoaded);
-
-				function xmlLoaded(event:Event):void
-				{
-					trace("the xml Loaded event is", event);
-					showTxt.text = "XML載入成功";
-					allTypeSourceXML = XML(myLoader.data);
-				}
+				txtLoader.addEventListener(IOErrorEvent.IO_ERROR, txtErrorHandler);
+				txtLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, txtErrorHandler);
 			}
 			
-			private function onLoaded(e:Event):void
+			public function xmlLoaded(event:Event):void
 			{
-				showTxt.text = e.target.data;
+				showTxt.text = "XML載入成功";
+				allTypeSourceXML = XML(event.currentTarget.data);
 			}
 			
 			private function TXTselectionChangeHandler(event:Event):void
 			{
 				txtLoader.load(new URLRequest(event.currentTarget.selectedItem));
 			}
+			
 			private function JPGselectionChangeHandler(event:Event):void
 			{
 				jpgSelected = event.currentTarget.selectedItem;
 			}
+			
 			private function PNGselectionChangeHandler(event:Event):void
 			{
 				pngSelected = event.currentTarget.selectedItem;
 			}
+			
 			private function MP3selectionChangeHandler(event:Event):void
 			{
 				mp3Selected = event.currentTarget.selectedItem;
 			}
+			
 			private function SWFselectionChangeHandler(event:Event):void
 			{
 				swfSelected = event.currentTarget.selectedItem;
 			}
-			
-//			private function showProfile(evt:Event):void
-//			{
-//				selectedData = txtList2.selectedItem as XML;	
-//				selectedData2 = jpgList2.selectedItem as XML;	
-//				selectedData3 = pngList2.selectedItem as XML;
-//				selectedData4 = mp3List2.selectedItem as XML;
-//				selectedData5 = swfList2.selectedItem as XML;
-//				trace("the selectedData", mp3List2.selectedItem.source);
-//			}
 			
 			private function playMp3InAsset(e:MouseEvent):void
 			{
@@ -96,11 +90,46 @@
 			{
 				sndchannel.stop();
 			}
+			
+			private function onLoaded(e:Event):void
+			{
+				showTxt.text = e.target.data;
+			}
+			
+			private function xmlErrorHandler(event:Event):void
+			{
+				showTxt.text = "XML載入錯誤";
+				throw new IllegalOperationError("cannot load the specified file");
+			}
+			
+			private function txtErrorHandler(event:Event):void
+			{
+				showTxt.text = "txt載入錯誤";
+				throw new IllegalOperationError("cannot load the specified file");
+			}
+			
+			protected function showJpg_ioErrorHandler(event:IOErrorEvent):void
+			{
+				showTxt.text = "jpg載入錯誤";
+				throw new IllegalOperationError("cannot load the specified file");
+			}
+			
+			protected function showPng_ioErrorHandler(event:IOErrorEvent):void
+			{
+				showTxt.text = "png載入錯誤";
+				throw new IllegalOperationError("cannot load the specified file");
+			}
+			
+			protected function swfloader1_ioErrorHandler(event:IOErrorEvent):void
+			{
+				showTxt.text = "swf載入錯誤";
+				throw new IllegalOperationError("cannot load the specified file");
+			}
+			
 		]]>
 	</fx:Script>
 	<s:HGroup>
-		<s:VGroup height="490">
-			
+		<s:VGroup height="490" paddingLeft="30">
 			<s:List id="showTXT" change="TXTselectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.txt.children()}"/>
@@ -130,38 +159,14 @@
 		
 		<s:VGroup width="360">
 			<s:Label fontSize="24" id="showTxt"/>
-			<mx:Image id="showJpg" source="{jpgSelected}"/>
-			<mx:Image id="showPng" source="{pngSelected}"/>
+			<mx:Image id="showJpg" source="{jpgSelected}" ioError="showJpg_ioErrorHandler(event)"/>
+			<mx:Image id="showPng" source="{pngSelected}" ioError="showPng_ioErrorHandler(event)"/>
 		</s:VGroup>
 		
 		<s:VGroup width="360">
 			<s:Button label="播放" id="playSound" click="playMp3InAsset(event)"/>
 			<s:Button label="暫停" id="stopSound" click="stopMp3InAsset(event)"/>
-			<s:SWFLoader source="{swfSelected}"/>
+			<s:SWFLoader source="{swfSelected}" ioError="swfloader1_ioErrorHandler(event)"/>
 		</s:VGroup>
 	</s:HGroup>
 </s:Application>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
