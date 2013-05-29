@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <AllTypeFileSource>
 	<txt>
-		<source>assets/1.txt</source>
-		<source>assets/2.txt</source>
-		<source>assets/3.txt</source>
-		<source>assets/4.txt</source>
+		<source>assets/txtFolder/1.txt</source>
+		<source>assets/txtFolder/2.txt</source>
+		<source>assets/txtFolder/3.txt</source>
+		<source>assets/txtFolder/4.txt</source>
 	</txt>
 	<jpg>
-		<source>assets/1.jpg</source>
-		<source>assets/2.jpg</source>
-		<source>assets/3.jpg</source>
-		<source>assets/4.jpg</source>
+		<source>assets/jpgFolder/1.jpg</source>
+		<source>assets/jpgFolder/2.jpg</source>
+		<source>assets/jpgFolder/3.jpg</source>
+		<source>assets/jpgFolder/4.jpg</source>
 	</jpg>
 	<png>
-		<source>assets/1.png</source>
-		<source>assets/2.png</source>
-		<source>assets/3.png</source>
-		<source>assets/4.png</source>
+		<source>assets/pngFolder/1.png</source>
+		<source>assets/pngFolder/2.png</source>
+		<source>assets/pngFolder/3.png</source>
+		<source>assets/pngFolder/4.png</source>
 	</png>
 	<mp3>
-		<source>assets/One.mp3</source>
-		<source>assets/Linde.mp3</source>
+		<source>assets/mp3Folder/One.mp3</source>
+		<source>assets/mp3Folder/Linde.mp3</source>
 	</mp3>
 	<swf>
-		<source>assets/EmbedMe.swf</source>
-		<source>assets/EmbedMe3.swf</source>
+		<source>assets/swfFolder/EmbedMe.swf</source>
+		<source>assets/swfFolder/EmbedMe2.swf</source>
+		<source>assets/swfFolder/EmbedMe3.swf</source>
 	</swf>
 </AllTypeFileSource>

@@ -15,20 +15,36 @@
 			import spark.events.GridSelectionEvent;
 			import spark.events.IndexChangeEvent;
 			
-			private var txtLoader:URLLoader;
 			public var snd:Sound;
 			public var sndchannel:SoundChannel;
 			
 			[Bindable]
 			public var allTypeSourceXML:XML = new XML();
 			
+			private var txtLoader:URLLoader;
+			
+			[Bindable]
+			private var jpgSelected:String;
+			
+			[Bindable]
+			private var pngSelected:String;
+			
+			private var mp3Selected:String;
+			
+			[Bindable]
+			private var swfSelected:String;
+			
 			private function init():void
-			{				
+			{
+				txtLoader = new URLLoader();
+				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
+				
 				var myLoader:URLLoader = new URLLoader(new URLRequest("assets/user-data.xml"));
 				myLoader.addEventListener("complete", xmlLoaded);
-				
+
 				function xmlLoaded(event:Event):void
 				{
+					trace("the xml Loaded event is", event);
 					showTxt.text = "XML載入成功";
 					allTypeSourceXML = XML(myLoader.data);
 				}
@@ -39,35 +55,40 @@
 				showTxt.text = e.target.data;
 			}
 			
-			private function selectionChangeHandler(event:Event):void
+			private function TXTselectionChangeHandler(event:Event):void
 			{
-				profileJob.text = event.currentTarget.selectedItem;
-				profileEmail.text = event.currentTarget.selectedIndex;
+				txtLoader.load(new URLRequest(event.currentTarget.selectedItem));
 			}
-//			private function JPGselectionChangeHandler(event:Event):void
+			private function JPGselectionChangeHandler(event:Event):void
+			{
+				jpgSelected = event.currentTarget.selectedItem;
+			}
+			private function PNGselectionChangeHandler(event:Event):void
+			{
+				pngSelected = event.currentTarget.selectedItem;
+			}
+			private function MP3selectionChangeHandler(event:Event):void
+			{
+				mp3Selected = event.currentTarget.selectedItem;
+			}
+			private function SWFselectionChangeHandler(event:Event):void
+			{
+				swfSelected = event.currentTarget.selectedItem;
+			}
+			
+//			private function showProfile(evt:Event):void
 //			{
-//				profileJob.text = event.currentTarget.selectedItem;
-//				profileEmail.text = event.currentTarget.selectedIndex;
-//			}
-//			private function PNGselectionChangeHandler(event:Event):void
-//			{
-//				profileJob.text = event.currentTarget.selectedItem;
-//				profileEmail.text = event.currentTarget.selectedIndex;
-//			}
-//			private function MP3selectionChangeHandler(event:Event):void
-//			{
-//				profileJob.text = event.currentTarget.selectedItem;
-//				profileEmail.text = event.currentTarget.selectedIndex;
-//			}
-//			private function SWFselectionChangeHandler(event:Event):void
-//			{
-//				profileJob.text = event.currentTarget.selectedItem;
-//				profileEmail.text = event.currentTarget.selectedIndex;
+//				selectedData = txtList2.selectedItem as XML;	
+//				selectedData2 = jpgList2.selectedItem as XML;	
+//				selectedData3 = pngList2.selectedItem as XML;
+//				selectedData4 = mp3List2.selectedItem as XML;
+//				selectedData5 = swfList2.selectedItem as XML;
+//				trace("the selectedData", mp3List2.selectedItem.source);
 //			}
 			
 			private function playMp3InAsset(e:MouseEvent):void
 			{
-				snd = new Sound(new URLRequest(allTypeSourceXML.mp3[0].source[1]));
+				snd = new Sound(new URLRequest(mp3Selected));
 				sndchannel = snd.play();
 			}
 			
@@ -80,47 +101,67 @@
 	<s:HGroup>
 		<s:VGroup height="490">
 			
-			<s:List id="showTXT" change="selectionChangeHandler(event)">
+			<s:List id="showTXT" change="TXTselectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.txt.children()}"/>
 				</s:dataProvider>
 			</s:List>
-			<s:List id="showjpg">
+			<s:List id="showjpg" change="JPGselectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.jpg.children()}"/>
 				</s:dataProvider>
 			</s:List>
-			<s:List id="showpng">
+			<s:List id="showpng" change="PNGselectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.png.children()}"/>
 				</s:dataProvider>
 			</s:List>
-			<s:List id="showmp3">
+			<s:List id="showmp3" change="MP3selectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.mp3.children()}"/>
 				</s:dataProvider>
 			</s:List>
-			<s:List id="showSWF">
+			<s:List id="showSWF" change="SWFselectionChangeHandler(event)">
 				<s:dataProvider>
 					<s:XMLListCollection source="{allTypeSourceXML.swf.children()}"/>
 				</s:dataProvider>
 			</s:List>
-			
-			<s:Label id="profileJob" text="Position:{allTypeSourceXML.jpg[0].source[1]}"/>
-			<s:Label id="profileEmail" text="Email:{allTypeSourceXML.png[0].source[1]}"/>
 		</s:VGroup>
 		
 		<s:VGroup width="360">
 			<s:Label fontSize="24" id="showTxt"/>
-			<mx:Image id="showJpg" source="{allTypeSourceXML.jpg[0].source[1]}"/>
-			<mx:Image id="showPng" source="{allTypeSourceXML.png[0].source[1]}"/>
+			<mx:Image id="showJpg" source="{jpgSelected}"/>
+			<mx:Image id="showPng" source="{pngSelected}"/>
 		</s:VGroup>
 		
 		<s:VGroup width="360">
 			<s:Button label="播放" id="playSound" click="playMp3InAsset(event)"/>
 			<s:Button label="暫停" id="stopSound" click="stopMp3InAsset(event)"/>
-			<s:SWFLoader source="{allTypeSourceXML.swf[0].source[1]}"/>
+			<s:SWFLoader source="{swfSelected}"/>
 		</s:VGroup>
-		
 	</s:HGroup>
 </s:Application>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
