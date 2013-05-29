@@ -2,50 +2,28 @@
 <AllTypeFileSource>
 	<txt>
 		<source>assets/1.txt</source>
-	</txt>
-	<txt>
 		<source>assets/2.txt</source>
-	</txt>
-	<txt>
 		<source>assets/3.txt</source>
-	</txt>
-	<txt>
 		<source>assets/4.txt</source>
 	</txt>
 	<jpg>
 		<source>assets/1.jpg</source>
-	</jpg>
-	<jpg>
 		<source>assets/2.jpg</source>
-	</jpg>
-	<jpg>
 		<source>assets/3.jpg</source>
-	</jpg>
-	<jpg>
 		<source>assets/4.jpg</source>
 	</jpg>
 	<png>
 		<source>assets/1.png</source>
-	</png>
-	<png>
 		<source>assets/2.png</source>
-	</png>
-	<png>
 		<source>assets/3.png</source>
-	</png>
-	<png>
 		<source>assets/4.png</source>
 	</png>
 	<mp3>
 		<source>assets/One.mp3</source>
-	</mp3>
-	<mp3>
 		<source>assets/Linde.mp3</source>
 	</mp3>
 	<swf>
 		<source>assets/EmbedMe.swf</source>
-	</swf>
-	<swf>
 		<source>assets/EmbedMe3.swf</source>
 	</swf>
 </AllTypeFileSource>

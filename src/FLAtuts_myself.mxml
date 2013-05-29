@@ -4,34 +4,16 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" 
 			   minWidth="955" minHeight="600"
 			   applicationComplete="init()">
-	<fx:Declarations>
-		<s:HTTPService url="assets/user-data.xml" id="userData" 
-					   result="contentHandler(event)" resultFormat="e4x"/>
-	</fx:Declarations>
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.XMLListCollection;
 			import mx.rpc.events.ResultEvent;
-			
 			import spark.components.Grid;
 			import spark.events.GridSelectionEvent;
-			
-			[Bindable]
-			private var txtList:XMLList;
-			
-			[Bindable]
-			private var jpgList:XMLList;
-			
-			[Bindable]
-			private var pngList:XMLList;
-			
-			[Bindable]
-			private var mp3List:XMLList;
-			
-			[Bindable]
-			private var swfList:XMLList;
+			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
 			private var selectedData:XML;
@@ -52,13 +34,32 @@
 			public var snd:Sound;
 			public var sndchannel:SoundChannel;
 			
+			[Bindable]
+			public var allTypeSourceXML:XML = new XML();
+			
+			[Bindable]
+			public var txtTypeSource:XMLList;
+			
+			[Bindable]
+			public var txtTypeSourceCol:XMLListCollection;
+			
+			
 			private function init():void
 			{
-				userData.send();
-				showTxt.text = "No contact Selected";
+//				txtLoader = new URLLoader();
+//				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
 				
-				txtLoader = new URLLoader();
-				txtLoader.addEventListener(Event.COMPLETE, onLoaded);
+				var myLoader:URLLoader = new URLLoader(new URLRequest("assets/user-data.xml"));
+				myLoader.addEventListener("complete", xmlLoaded);
+
+				txtTypeSource = allTypeSourceXML.jpg.source;
+				txtTypeSourceCol = new XMLListCollection(txtTypeSource);
+				
+				function xmlLoaded(event:Event):void
+				{
+					showTxt.text = "XML載入成功";
+					allTypeSourceXML = XML(myLoader.data);
+				}
 				
 			}
 			
@@ -67,38 +68,46 @@
 				showTxt.text = e.target.data;
 			}
 			
-//			private function selectionChangeHandler(event:XML):void
+			private function selectionChangeHandler(event:Event):void
+			{
+				profileJob.text = event.currentTarget.selectedItem;
+				profileEmail.text = event.currentTarget.selectedIndex;
+			}
+//			private function JPGselectionChangeHandler(event:Event):void
 //			{
-//				const eventGrid:Grid = event.currentTarget.grid;
-//				var currentIndex:int = eventGrid.selectedIndex;
-//				var currentDataItem:Object = eventGrid.selectedItem;
-//				profileJob.text = String(currentDataItem.companyID);
-//				profileEmail.text = String(currentDataItem.lastName);
+//				profileJob.text = event.currentTarget.selectedItem;
+//				profileEmail.text = event.currentTarget.selectedIndex;
+//			}
+//			private function PNGselectionChangeHandler(event:Event):void
+//			{
+//				profileJob.text = event.currentTarget.selectedItem;
+//				profileEmail.text = event.currentTarget.selectedIndex;
+//			}
+//			private function MP3selectionChangeHandler(event:Event):void
+//			{
+//				profileJob.text = event.currentTarget.selectedItem;
+//				profileEmail.text = event.currentTarget.selectedIndex;
+//			}
+//			private function SWFselectionChangeHandler(event:Event):void
+//			{
+//				profileJob.text = event.currentTarget.selectedItem;
+//				profileEmail.text = event.currentTarget.selectedIndex;
 //			}
 			
-			private function contentHandler(evt:ResultEvent):void
-			{
-				txtList = evt.result.txt;
-				jpgList = evt.result.jpg;
-				pngList = evt.result.png;
-				mp3List = evt.result.mp3;
-				swfList = evt.result.swf;
-			}
-			
-			private function showProfile(evt:Event):void
-			{
-				selectedData = txtList2.selectedItem as XML;	
-				selectedData2 = jpgList2.selectedItem as XML;	
-				selectedData3 = pngList2.selectedItem as XML;
-				selectedData4 = mp3List2.selectedItem as XML;
-				selectedData5 = swfList2.selectedItem as XML;
-				trace("the selectedData", mp3List2.selectedItem.source);
-				txtLoader.load(new URLRequest(txtList2.selectedItem.source));
-			}
+//			private function showProfile(evt:Event):void
+//			{
+//				selectedData = txtList2.selectedItem as XML;	
+//				selectedData2 = jpgList2.selectedItem as XML;	
+//				selectedData3 = pngList2.selectedItem as XML;
+//				selectedData4 = mp3List2.selectedItem as XML;
+//				selectedData5 = swfList2.selectedItem as XML;
+//				trace("the selectedData", mp3List2.selectedItem.source);
+//				txtLoader.load(new URLRequest(txtList2.selectedItem.source));
+//			}
 			
 			private function playMp3InAsset(e:MouseEvent):void
 			{
-				snd = new Sound(new URLRequest(mp3List2.selectedItem.source));
+				snd = new Sound(new URLRequest(allTypeSourceXML.mp3[0].source[1]));
 				sndchannel = snd.play();
 			}
 			
@@ -111,49 +120,46 @@
 	<s:HGroup>
 		<s:VGroup height="490">
 			
-			<mx:DataGrid id="txtList2" width="400" change="showProfile(event)" dataProvider="{txtList}">
-				<mx:columns>
-					<mx:DataGridColumn dataField="source" headerText="txt source"/>
-				</mx:columns>
-			</mx:DataGrid>			
-			<mx:DataGrid id="jpgList2" width="400" change="showProfile(event)" dataProvider="{jpgList}">
-				<mx:columns>
-					<mx:DataGridColumn dataField="source" headerText="jpg source"/>
-				</mx:columns>
-			</mx:DataGrid>			
-			<mx:DataGrid id="pngList2" width="400" change="showProfile(event)" dataProvider="{pngList}">
-				<mx:columns>
-					<mx:DataGridColumn dataField="source" headerText="png source"/>
-				</mx:columns>
-			</mx:DataGrid>			
+			<s:List id="showTXT" change="selectionChangeHandler(event)">
+				<s:dataProvider>
+					<s:XMLListCollection source="{allTypeSourceXML.txt.children()}"/>
+				</s:dataProvider>
+			</s:List>
+			<s:List id="showjpg">
+				<s:dataProvider>
+					<s:XMLListCollection source="{allTypeSourceXML.jpg.children()}"/>
+				</s:dataProvider>
+			</s:List>
+			<s:List id="showpng">
+				<s:dataProvider>
+					<s:XMLListCollection source="{allTypeSourceXML.png.children()}"/>
+				</s:dataProvider>
+			</s:List>
+			<s:List id="showmp3">
+				<s:dataProvider>
+					<s:XMLListCollection source="{allTypeSourceXML.mp3.children()}"/>
+				</s:dataProvider>
+			</s:List>
+			<s:List id="showSWF">
+				<s:dataProvider>
+					<s:XMLListCollection source="{allTypeSourceXML.swf.children()}"/>
+				</s:dataProvider>
+			</s:List>
 			
-			<s:Label id="profileJob" text="Position:{selectedData2.source}"/>
-			<s:Label id="profileEmail" text="Email:{selectedData3.source}"/>
+			<s:Label id="profileJob" text="Position:{allTypeSourceXML.jpg[0].source[1]}"/>
+			<s:Label id="profileEmail" text="Email:{allTypeSourceXML.png[0].source[1]}"/>
 		</s:VGroup>
 		
 		<s:VGroup width="360">
 			<s:Label fontSize="24" id="showTxt"/>
-			<mx:Image id="showJpg" source="{selectedData2.source}"/>
-			<mx:Image id="showPng" source="{selectedData3.source}"/>
-		</s:VGroup>
-		
-		<s:VGroup width="400">
-			<mx:DataGrid id="mp3List2" width="400" change="showProfile(event)" dataProvider="{mp3List}">
-				<mx:columns>
-					<mx:DataGridColumn dataField="source" headerText="mp3 source"/>
-				</mx:columns>
-			</mx:DataGrid>			
-			<mx:DataGrid id="swfList2" width="400" change="showProfile(event)" dataProvider="{swfList}">
-				<mx:columns>
-					<mx:DataGridColumn dataField="source" headerText="swf source"/>
-				</mx:columns>
-			</mx:DataGrid>	
-			<s:SWFLoader source="{selectedData5.source}"/>
+			<mx:Image id="showJpg" source="{allTypeSourceXML.jpg[0].source[1]}"/>
+			<mx:Image id="showPng" source="{allTypeSourceXML.png[0].source[1]}"/>
 		</s:VGroup>
 		
 		<s:VGroup width="360">
 			<s:Button label="播放" id="playSound" click="playMp3InAsset(event)"/>
 			<s:Button label="暫停" id="stopSound" click="stopMp3InAsset(event)"/>
+			<s:SWFLoader source="{allTypeSourceXML.swf[0].source[1]}"/>
 		</s:VGroup>
 		
 	</s:HGroup>
